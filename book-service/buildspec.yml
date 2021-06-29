@@ -1,43 +1,43 @@
-#version: 0.2
-#
-#phases:
-#  install:
-#    runtime-versions:
-#      docker: 18
-#  pre_build:
-#    commands:
-#      - echo Logging in to Amazon ECR...
-#      - $(aws ecr get-login --no-include-email --region $AWS_REGION)
-#  build:
-#    commands:
-#      - echo Build started on `date`
-#      - echo Building java
-#      - mvn compile
-#      - mvn package 
-#      - echo Building the Docker image...
-#      - docker build -t service/booksapp .
-#      - docker tag service/booksapp $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/service-registry:booksapp
-#  post_build:
-#    commands:
-#      - echo Build completed on `date`
-#      - echo Pushing the Docker image...
-#      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/service-registry:booksapp
-#- echo Writing definitions file
-#- printf '[{"name":"booksapp-container","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/service-registry:booksapp > taskdefinition.json
-#
-#artifacts:
-#  files: taskdefinition.json 
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      docker: 18
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region $AWS_REGION)
   build:
     commands:
-      - echo Entered the build phase...
-      - mvn clean package
+      - echo Build started on `date`
+      - echo Building java
+      - mvn compile
+      - mvn package 
+      - echo Building the Docker image...
+      - docker build -t service/booksapp .
+      - docker tag service/booksapp $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/service-registry:booksapp
   post_build:
     commands:
-      - echo Build completed successfully
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/service-registry:booksapp
+- echo Writing definitions file
+- printf '[{"name":"booksapp-container","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/service-registry:booksapp > taskdefinition.json
+
 artifacts:
-  files:
-    - target/order-service.jar
-  discard-paths: yes
+  files: taskdefinition.json 
+#version: 0.2
+
+#phases:
+ # build:
+  #  commands:
+   #   - echo Entered the build phase...
+    #  - mvn clean package
+  #post_build:
+   # commands:
+    #  - echo Build completed successfully
+#artifacts:
+ # files:
+  #  - target/order-service.jar
+  #discard-paths: yes
